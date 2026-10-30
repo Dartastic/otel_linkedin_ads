@@ -2,7 +2,7 @@ name: otel_linkedin_ads
 description: >-
   OpenTelemetry instrumentation for linkedin_ads by Dartastic.io. Adds
   standard OpenTelemetry observability to applications that use linkedin_ads.
-version: 0.1.0-wip
+version: 0.1.0
 repository: https://github.com/dartastic/otel_linkedin_ads
 homepage: https://dartastic.io
 
