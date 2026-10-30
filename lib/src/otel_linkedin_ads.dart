@@ -1,15 +1,16 @@
-// Licensed under the Dartastic Pro Software License Agreement.
+// Licensed under the Apache License, Version 2.0
 // Copyright 2025-2026 Mindful Software LLC d/b/a Dartastic.io, All rights reserved.
 
-import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
+import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'otel_linkedin_ads_suppression.dart';
 
 const _tracerName = 'dartastic_otel_libs_linkedin_ads';
 
-Tracer _tracer() => OTel.tracerProvider().getTracer(_tracerName);
+APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 class LinkedinAdsResult {
+  /// Creates a result.
   const LinkedinAdsResult({
     this.adAccountId,
     this.campaignGroupId,
@@ -73,8 +74,13 @@ class LinkedinAdsResult {
   final int? statusCode;
 }
 
+/// What a traced call returned: the value for the caller plus fields
+/// recorded on the span.
 class LinkedinAdsCallResult<T> {
+  /// Creates a call result.
   const LinkedinAdsCallResult({required this.value, this.result});
+
+  /// The value returned to the caller.
   final T value;
   final LinkedinAdsResult? result;
 }
@@ -101,104 +107,104 @@ Future<T> tracedLinkedinAds<T>({
   final span = _tracer().startSpan(
     'linkedin_ads $operation',
     kind: SpanKind.client,
-    attributes: OTel.attributesFromMap(m),
+    attributes: OTelAPI.attributesFromMap(m),
   );
   try {
     final r = await invoke();
     if (r.result != null) {
       final extras = <Attribute<Object>>[];
       if (r.result!.adAccountId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'linkedin_ads.ad_account.id',
           r.result!.adAccountId!,
         ));
       }
       if (r.result!.campaignGroupId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'linkedin_ads.campaign_group.id',
           r.result!.campaignGroupId!,
         ));
       }
       if (r.result!.campaignId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'linkedin_ads.campaign.id',
           r.result!.campaignId!,
         ));
       }
       if (r.result!.creativeId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'linkedin_ads.creative.id',
           r.result!.creativeId!,
         ));
       }
       if (r.result!.objectiveType != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'linkedin_ads.objective.type',
           r.result!.objectiveType!,
         ));
       }
       if (r.result!.campaignType != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'linkedin_ads.campaign.type',
           r.result!.campaignType!,
         ));
       }
       if (r.result!.costType != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'linkedin_ads.cost.type',
           r.result!.costType!,
         ));
       }
       if (r.result!.targetAudienceSize != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'linkedin_ads.target_audience.size',
           r.result!.targetAudienceSize!,
         ));
       }
       if (r.result!.spendMinor != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'linkedin_ads.spend.minor',
           r.result!.spendMinor!,
         ));
       }
       if (r.result!.currencyCode != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'linkedin_ads.currency.code',
           r.result!.currencyCode!,
         ));
       }
       if (r.result!.impressions != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'linkedin_ads.impressions',
           r.result!.impressions!,
         ));
       }
       if (r.result!.clicks != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'linkedin_ads.clicks',
           r.result!.clicks!,
         ));
       }
       if (r.result!.oneClickLeadFormOpens != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'linkedin_ads.one_click_lead_form_opens',
           r.result!.oneClickLeadFormOpens!,
         ));
       }
       if (r.result!.oneClickLeads != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'linkedin_ads.one_click_leads',
           r.result!.oneClickLeads!,
         ));
       }
       if (r.result!.conversionValueMinor != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'linkedin_ads.conversion_value.minor',
           r.result!.conversionValueMinor!,
         ));
       }
       if (r.result!.statusCode != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'http.response.status_code',
           r.result!.statusCode!,
         ));
@@ -209,13 +215,13 @@ Future<T> tracedLinkedinAds<T>({
           );
         }
       }
-      if (extras.isNotEmpty) span.addAttributes(OTel.attributes(extras));
+      if (extras.isNotEmpty) span.addAttributes(OTelAPI.attributes(extras));
     }
     return r.value;
   } catch (e, st) {
-    span.addAttributes(OTel.attributes([
-      OTel.attributeString(
-        ErrorResource.errorType.key,
+    span.addAttributes(OTelAPI.attributes([
+      OTelAPI.attributeString(
+        ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
     ]));
